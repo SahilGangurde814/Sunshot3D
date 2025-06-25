@@ -18,10 +18,10 @@ namespace Sunshot.Gameplay
 
         private void Awake()
         {
-            if (instance == null)
-                instance = this;
-            else
+            if (instance != null)
                 Destroy(instance);
+
+            instance = this;
         }
 
         private void Start()
@@ -48,7 +48,7 @@ namespace Sunshot.Gameplay
 
         public void Restart()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         public void GameOver()

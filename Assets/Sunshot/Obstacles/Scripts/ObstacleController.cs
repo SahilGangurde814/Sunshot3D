@@ -55,7 +55,7 @@ namespace Sunshot.Obstacles
 
             destroyParticle.gameObject.SetActive(true);
             destroyParticle.Play();
-            StartCoroutine(WaitForSeconds(0.3f));
+            StartCoroutine(WaitForSeconds(0.2f));
         }
 
         IEnumerator WaitForSeconds(float seconds)

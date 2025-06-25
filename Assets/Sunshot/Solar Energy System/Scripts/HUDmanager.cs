@@ -40,10 +40,10 @@ namespace Sunshot.SolarEnergySystem.UI
 
         private void Awake()
         {
-            if(instance == null) 
-                instance = this;
-            else
+            if(instance != null) 
                 Destroy(instance);
+            
+            instance = this;
         }
 
         void Start()

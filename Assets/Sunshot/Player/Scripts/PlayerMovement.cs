@@ -1,5 +1,6 @@
 using Sunshot.SolarEnergySystem.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Sunshot.PlayerSystem
@@ -40,10 +41,10 @@ namespace Sunshot.PlayerSystem
             
             CameraFollow();
 
-            if(Input.GetKey(KeyCode.W))
-                isThrusterInUse = true;
-            else
-                isThrusterInUse = false;
+            //if(Input.GetKey(KeyCode.W))
+            //    isThrusterInUse = true;
+            //else
+            //    isThrusterInUse = false;
                 
         }
 
@@ -51,7 +52,7 @@ namespace Sunshot.PlayerSystem
         {
             ForwardMove();
 
-            HorizontalMovement();
+            //HorizontalMovement();
             
             Thruster();
 
@@ -70,23 +71,25 @@ namespace Sunshot.PlayerSystem
             MoveByDir(transform, transform.forward, forwardMovementSpeed);
         }
 
-        void HorizontalMovement()
-        {
-            Quaternion rotation = Quaternion.identity;
+        #region For Keyboard (old input system)
+        //void HorizontalMovement()
+        //{
+        //    Quaternion rotation = Quaternion.identity;
 
-            if (Input.GetKey(KeyCode.D))
-            {
-                rotation = Quaternion.Euler(0, 0, -30);
-                MoveByDir(playerMesh, Vector3.right, horizontalMoveSpeed);
-            }
-            else if(Input.GetKey(KeyCode.A))
-            {
-                rotation = Quaternion.Euler(0, 0, 30);
-                MoveByDir(playerMesh, Vector3.left, horizontalMoveSpeed);
-            }
+        //    if (Input.GetKey(KeyCode.D))
+        //    {
+        //        rotation = Quaternion.Euler(0, 0, -30);
+        //        MoveByDir(playerMesh, Vector3.right, horizontalMoveSpeed);
+        //    }
+        //    else if (Input.GetKey(KeyCode.A))
+        //    {
+        //        rotation = Quaternion.Euler(0, 0, 30);
+        //        MoveByDir(playerMesh, Vector3.left, horizontalMoveSpeed);
+        //    }
 
-            ControlRotation(playerMesh, rotation);
-        }
+        //    ControlRotation(playerMesh, rotation);
+        //}
+        #endregion
 
         void Thruster()
         {
@@ -114,73 +117,60 @@ namespace Sunshot.PlayerSystem
         void ControlRotation(Transform trasformToRotate, Quaternion rotation)
         {
             trasformToRotate.rotation = Quaternion.Slerp(trasformToRotate.rotation, rotation, 5 * Time.deltaTime);
-            //trasformToRotate.rotation = rotation;
         }
 
         void TouchInputs()
         {
-            isThrusterInUse = false;
-            isDragging = false;
+            Quaternion targetRoatation = Quaternion.identity;   
+            if (Touchscreen.current == null || Touchscreen.current.touches.Count == 0)
+                return;
 
-            if (Input.touchCount <= 0) return;
-
-            for(int i = 0; i < Input.touchCount; i++)
+            foreach (var touchControl in Touchscreen.current.touches)
             {
-                Touch touch = Input.GetTouch(i);
-                Vector2 touchPos = touch.position;
+                if (!touchControl.press.isPressed && !touchControl.press.wasPressedThisFrame && !touchControl.press.wasReleasedThisFrame)
+                    continue;
+
+                var touchPos = touchControl.position.ReadValue();
                 bool isLeftTouch = touchPos.x < Screen.width / 2;
                 bool isRightTouch = touchPos.x > Screen.width / 2;
 
-                switch (touch.phase)
+                if (touchControl.press.wasPressedThisFrame)
                 {
-                    case TouchPhase.Began:
-                        if (isLeftTouch)
-                            isDragging = true;
-
-                        if(isRightTouch)
-                            isThrusterInUse = true;
-
-                        startTouchPos = touch.position;
-                        break;
-
-                    case TouchPhase.Moved:
-                        if (isDragging == false) break;
-
-                        Vector2 delta = touch.position - startTouchPos;
-                        Quaternion rotation = Quaternion.identity;
+                    if (isLeftTouch) isDragging = true;
+                    if (isRightTouch) isThrusterInUse = true;
+                    startTouchPos = touchPos;
+                }
+                else if (touchControl.press.isPressed && touchControl.delta.ReadValue() != Vector2.zero)
+                {
+                    if (isDragging)
+                    {
+                        Vector2 delta = touchPos - startTouchPos;
 
                         if (delta.x > touchDragSensitivity)
                         {
                             MoveByDir(playerMesh, transform.right, horizontalMoveSpeed);
-                            rotation = Quaternion.Euler(0, 0, -30);
+                            targetRoatation = Quaternion.Euler(0, 0, -30);
                         }
                         else if (delta.x < -touchDragSensitivity)
                         {
                             MoveByDir(playerMesh, -transform.right, horizontalMoveSpeed);
-                            rotation = Quaternion.Euler(0, 0, 30);
+                            targetRoatation = Quaternion.Euler(0, 0, 30);
                         }
-                        ControlRotation(playerMesh, rotation);
 
-                        startTouchPos = touch.position;
-                    
-                        goto case TouchPhase.Stationary;
+                        startTouchPos = touchPos;
+                    }
 
-                    case TouchPhase.Stationary:
-                        if(isRightTouch == true)
-                            isThrusterInUse = true;
-                        break;
-
-                    case TouchPhase.Ended:
-                    case TouchPhase.Canceled:
-                        if(isLeftTouch == true)
-                            isDragging = false;
-
-                        if (isRightTouch == true)
-                            isThrusterInUse = false;
-                        break;
+                    if (isRightTouch)
+                        isThrusterInUse = true;
                 }
-
+                else if (touchControl.press.wasReleasedThisFrame)
+                {
+                    isDragging = false;
+                    isThrusterInUse = false;
+                }
             }
+
+            ControlRotation(playerMesh, targetRoatation);
         }
 
         public bool GetIsThrusterOn()

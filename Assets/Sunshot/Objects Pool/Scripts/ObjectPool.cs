@@ -46,10 +46,10 @@ namespace Sunshot.Generic.ObjectPool
 
         private void Awake()
         {
-            if (instance == null)
-                instance = this;
-            else
+            if (instance != null)
                 Destroy(instance);
+            
+            instance = this;
         }
 
         private void Start()
