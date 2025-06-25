@@ -9,6 +9,8 @@ namespace Sunshot.ShootingSystem.Projectiles
         [SerializeField] float speed = 20f;
         [SerializeField] float lifeTime = 2f;
 
+        [SerializeField] GameObject DestroyParticle;
+
         // Dependencies
         ObjectPool objectPool;
 
@@ -38,7 +40,7 @@ namespace Sunshot.ShootingSystem.Projectiles
             if(obstacleController.obstacleInfo.obstacleType == ObstacleType.Industructible) return;
             
             // Disable obsatcle and return it to object pool
-            obstacleController.Deactivate();
+            obstacleController.Deactivate(true);
         }
 
         void Deactivate()

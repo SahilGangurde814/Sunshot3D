@@ -10,7 +10,7 @@ namespace Sunshot.Obstacles
             // Return to obstacles pool.
             ObstacleController obstacleController = other.transform.GetComponent<ObstacleController>();
             if (obstacleController != null) 
-                obstacleController.Deactivate();
+                obstacleController.Deactivate(false);
 
             // Return to collectibles pool.
             CollectiblesHandler collectiblesHandler = other.GetComponent<CollectiblesHandler>();
