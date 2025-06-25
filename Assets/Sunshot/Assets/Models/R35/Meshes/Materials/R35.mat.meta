@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 574e509a6a149f14991ee36a16c0c9bd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 121438
+  packageName: DropShip R35
+  packageVersion: 1.0
+  assetPath: Assets/R35/Meshes/Materials/R35.mat
+  uploadId: 252479
