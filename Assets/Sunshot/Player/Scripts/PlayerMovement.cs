@@ -41,18 +41,18 @@ namespace Sunshot.PlayerSystem
             
             CameraFollow();
 
-            //if(Input.GetKey(KeyCode.W))
+            //if (Input.GetKey(KeyCode.W))
             //    isThrusterInUse = true;
             //else
             //    isThrusterInUse = false;
-                
+
         }
 
         void PlayerMovementControl()
         {
             ForwardMove();
 
-            //HorizontalMovement();
+            HorizontalMovement();
             
             Thruster();
 
@@ -72,23 +72,23 @@ namespace Sunshot.PlayerSystem
         }
 
         #region For Keyboard (old input system)
-        //void HorizontalMovement()
-        //{
-        //    Quaternion rotation = Quaternion.identity;
+        void HorizontalMovement()
+        {
+            Quaternion rotation = Quaternion.identity;
 
-        //    if (Input.GetKey(KeyCode.D))
-        //    {
-        //        rotation = Quaternion.Euler(0, 0, -30);
-        //        MoveByDir(playerMesh, Vector3.right, horizontalMoveSpeed);
-        //    }
-        //    else if (Input.GetKey(KeyCode.A))
-        //    {
-        //        rotation = Quaternion.Euler(0, 0, 30);
-        //        MoveByDir(playerMesh, Vector3.left, horizontalMoveSpeed);
-        //    }
+            if (Input.GetKey(KeyCode.D))
+            {
+                rotation = Quaternion.Euler(0, 0, -30);
+                MoveByDir(playerMesh, Vector3.right, horizontalMoveSpeed);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                rotation = Quaternion.Euler(0, 0, 30);
+                MoveByDir(playerMesh, Vector3.left, horizontalMoveSpeed);
+            }
 
-        //    ControlRotation(playerMesh, rotation);
-        //}
+            ControlRotation(playerMesh, rotation);
+        }
         #endregion
 
         void Thruster()
@@ -111,7 +111,11 @@ namespace Sunshot.PlayerSystem
 
         void MoveByDir(Transform trasformToMove, Vector3 dir, float speed)
         {
-            trasformToMove.position += dir * speed * Time.deltaTime;
+            Vector3 newPosition = trasformToMove.position += dir * speed * Time.deltaTime;
+
+            newPosition.x = Mathf.Clamp(newPosition.x, -4f, 4f);
+
+            trasformToMove.position = newPosition;
         }
 
         void ControlRotation(Transform trasformToRotate, Quaternion rotation)

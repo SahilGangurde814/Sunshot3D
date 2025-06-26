@@ -9,8 +9,6 @@ namespace Sunshot.ShootingSystem.Projectiles
         [SerializeField] float speed = 20f;
         [SerializeField] float lifeTime = 2f;
 
-        [SerializeField] GameObject DestroyParticle;
-
         // Dependencies
         ObjectPool objectPool;
 

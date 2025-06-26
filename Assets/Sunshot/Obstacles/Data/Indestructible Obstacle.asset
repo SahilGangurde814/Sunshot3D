@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleType: 2
   obstacleName: Big Obstacle
-  obstacleTransform: {fileID: 5806374921888392193, guid: 079674b74e20c5c4287106a86ced95fc, type: 3}
+  obstacleTransform: {fileID: 6550793613176113100, guid: 8f914161a5599404b8b3f4d69f0f3e0d, type: 3}
   spawnCooldown: 2

@@ -47,7 +47,7 @@ namespace Sunshot.Generic.ObjectPool
         private void Awake()
         {
             if (instance != null)
-                Destroy(instance);
+                Destroy(instance.gameObject);
             
             instance = this;
         }

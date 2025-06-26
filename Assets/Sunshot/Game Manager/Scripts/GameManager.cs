@@ -19,7 +19,7 @@ namespace Sunshot.Gameplay
         private void Awake()
         {
             if (instance != null)
-                Destroy(instance);
+                Destroy(instance.gameObject);
 
             instance = this;
         }
@@ -49,6 +49,7 @@ namespace Sunshot.Gameplay
         public void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Time.timeScale = 1f;
         }
 
         public void GameOver()
